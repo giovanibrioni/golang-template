@@ -1,0 +1,31 @@
+@baseUrl = http://127.0.0.1:8081
+
+### Health
+GET {{baseUrl}}/api/v1/health
+
+### Create an item
+# @name createItem
+POST {{baseUrl}}/api/v1/items
+Content-Type: application/json
+
+{
+  "name": "Widget"
+}
+
+### List items
+GET {{baseUrl}}/api/v1/items
+
+### Fetch the item created above
+@itemId = {{createItem.response.body.$.id}}
+GET {{baseUrl}}/api/v1/items/{{itemId}}
+
+### Fetch a missing item
+GET {{baseUrl}}/api/v1/items/00000000-0000-0000-0000-000000000000
+
+### Create with an invalid name (400)
+POST {{baseUrl}}/api/v1/items
+Content-Type: application/json
+
+{
+  "name": ""
+}

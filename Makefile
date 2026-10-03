@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install up down dev migrate test-unit test lint
+.PHONY: help install up down dev migrate test-unit test lint review
 
 help: ## Show available targets
 	@echo "Targets:"
@@ -12,6 +12,7 @@ help: ## Show available targets
 	@echo "  test-unit   Run tests that do not need Postgres"
 	@echo "  test        Run all tests against app_test"
 	@echo "  lint        Check formatting and go vet"
+	@echo "  review      Architecture, orphan, env, and merge-risk checks"
 
 install:
 	go mod download
@@ -47,3 +48,11 @@ lint:
 	  exit 1; \
 	fi
 	go vet ./...
+
+review:
+	@status=0; \
+	go run .cursor/skills/golang-template-review/scripts/architecture_check.go || status=1; \
+	go run .cursor/skills/golang-template-review/scripts/orphan_check.go || status=1; \
+	go run .cursor/skills/golang-template-review/scripts/env_example_check.go || status=1; \
+	go run .cursor/skills/golang-template-review/scripts/merge_risk_check.go || status=1; \
+	exit $$status

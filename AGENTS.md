@@ -66,6 +66,7 @@ The fake repository in the unit test must implement the feature `Repository` int
 - `make test-unit`
 - `make test`
 - `make lint`
+- `make review`
 
 ## Adapt this template
 
