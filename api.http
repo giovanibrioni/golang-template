@@ -16,7 +16,7 @@ Content-Type: application/json
 GET {{baseUrl}}/api/v1/items
 
 ### Fetch the item created above
-@itemId = {{createItem.response.body.$.id}}
+@itemId = {{createItem.response.body.item.id}}
 GET {{baseUrl}}/api/v1/items/{{itemId}}
 
 ### Fetch a missing item
