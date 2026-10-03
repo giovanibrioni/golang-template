@@ -41,7 +41,7 @@ definitions:
           $ref: '#/definitions/items.Item'
         type: array
     type: object
-host: localhost:8080
+host: localhost:8081
 info:
   contact: {}
   description: A minimal Go HTTP template organized by domain

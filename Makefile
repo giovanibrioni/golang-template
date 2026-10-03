@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install up down dev migrate test-unit test lint review
+.PHONY: help install up down dev migrate swagger test-unit test lint review
 
 help: ## Show available targets
 	@echo "Targets:"
@@ -9,6 +9,7 @@ help: ## Show available targets
 	@echo "  down        Stop Postgres"
 	@echo "  dev         Run the API on :8081"
 	@echo "  migrate     Apply migrations and exit"
+	@echo "  swagger     Generate OpenAPI docs (swagger.json/yaml)"
 	@echo "  test-unit   Run tests that do not need Postgres"
 	@echo "  test        Run all tests against app_test"
 	@echo "  lint        Check formatting and go vet"
@@ -34,6 +35,10 @@ dev:
 migrate:
 	DATABASE_URL=postgres://postgres:postgres@localhost:5432/app?sslmode=disable \
 	  go run ./cmd/api -migrate-only
+
+swagger:
+	go install github.com/swaggo/swag/cmd/swag@latest
+	~/go/bin/swag init -g cmd/api/main.go -o docs
 
 test-unit:
 	go test -short ./...

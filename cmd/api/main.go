@@ -23,7 +23,7 @@ import (
 // @title Golang Template API
 // @version 1.0
 // @description A minimal Go HTTP template organized by domain
-// @host localhost:8080
+// @host localhost:8081
 // @BasePath /api/v1
 // @schemes http
 func main() {
@@ -34,6 +34,9 @@ func main() {
 }
 
 func run() error {
+	// migrate-only flag: runs migrations and exits.
+	// In production, consider running migrations as a separate init container/job
+	// to avoid coupling migration logic with the API binary.
 	migrateOnly := flag.Bool("migrate-only", false, "apply migrations and exit")
 	flag.Parse()
 
