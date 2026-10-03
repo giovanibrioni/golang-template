@@ -11,13 +11,21 @@ import (
 	"syscall"
 	"time"
 
+	_ "github.com/giovani/golang-template/docs"
 	"github.com/giovani/golang-template/internal/api"
 	"github.com/giovani/golang-template/internal/core/config"
 	"github.com/giovani/golang-template/internal/core/db"
 	"github.com/giovani/golang-template/internal/core/logging"
+	"github.com/giovani/golang-template/internal/core/tracing"
 	"github.com/giovani/golang-template/internal/items"
 )
 
+// @title Golang Template API
+// @version 1.0
+// @description A minimal Go HTTP template organized by domain
+// @host localhost:8080
+// @BasePath /api/v1
+// @schemes http
 func main() {
 	if err := run(); err != nil {
 		slog.Error("shutdown", "error", err)
@@ -33,6 +41,15 @@ func run() error {
 	logging.Setup(cfg.LogLevel, cfg.LogJSON)
 
 	ctx := context.Background()
+
+	// Initialize OpenTelemetry tracing
+	shutdownTracing, err := tracing.Init(ctx, "golang-template")
+	if err != nil {
+		slog.WarnContext(ctx, "tracing init failed", "error", err)
+	} else {
+		defer shutdownTracing(ctx)
+	}
+
 	pool, err := db.NewPool(ctx, cfg.DatabaseURL)
 	if err != nil {
 		return err

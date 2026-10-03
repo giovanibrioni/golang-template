@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	coreerrors "github.com/giovani/golang-template/internal/core/errors"
 	"github.com/giovani/golang-template/internal/items"
 )
 
@@ -115,8 +116,8 @@ func TestCreateRejectsName(t *testing.T) {
 	for _, name := range tests {
 		repo := &fakeRepository{}
 		_, err := items.NewService(repo).Create(context.Background(), name)
-		var validation items.ValidationError
-		if !errors.As(err, &validation) {
+		var appErr *coreerrors.AppError
+		if !errors.As(err, &appErr) || appErr.Code != coreerrors.ErrItemInvalid {
 			t.Fatalf("name %q: err = %v", name, err)
 		}
 		if len(repo.items) != 0 {

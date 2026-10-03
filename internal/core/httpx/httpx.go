@@ -34,6 +34,11 @@ type errorBody struct {
 	Detail string `json:"detail"`
 }
 
+// ErrorResponse is the standard error response format.
+type ErrorResponse struct {
+	Detail string `json:"detail" example:"Internal server error"`
+}
+
 // RequestID assigns a random id, stores it on the request context, and echoes X-Request-ID.
 func RequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

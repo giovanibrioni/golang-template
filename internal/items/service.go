@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"unicode/utf8"
+
+	"github.com/giovani/golang-template/internal/core/errors"
 )
 
 // Service applies item rules. It does not know about HTTP or transactions.
@@ -19,7 +21,7 @@ func NewService(repo Repository) *Service {
 // Create stores a new item. Name must contain between 1 and 200 runes.
 func (s *Service) Create(ctx context.Context, name string) (Item, error) {
 	if name == "" || utf8.RuneCountInString(name) > 200 {
-		return Item{}, ValidationError{Detail: "Name must be between 1 and 200 characters"}
+		return Item{}, errors.NewItemInvalid("Name must be between 1 and 200 characters")
 	}
 	item, err := s.repo.Add(ctx, name)
 	if err != nil {

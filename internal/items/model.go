@@ -1,6 +1,10 @@
 package items
 
-import "time"
+import (
+	"time"
+
+	"github.com/giovani/golang-template/internal/core/errors"
+)
 
 // Item is the public representation of a stored item.
 type Item struct {
@@ -9,25 +13,11 @@ type Item struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// NotFoundError means the item does not exist.
-type NotFoundError struct{}
-
-func (NotFoundError) Error() string { return "item not found" }
-
-func (NotFoundError) Kind() string { return "not_found" }
-
-func (NotFoundError) PublicDetail() string { return "Item not found" }
-
 // ErrNotFound is returned when an item id does not match a row.
-var ErrNotFound = NotFoundError{}
+var ErrNotFound = errors.NewItemNotFound("")
 
-// ValidationError is a rejected client input. Detail is safe to show.
-type ValidationError struct {
-	Detail string
-}
+// ErrInvalid is returned when item data is invalid.
+var ErrInvalid = errors.NewItemInvalid("")
 
-func (e ValidationError) Error() string { return e.Detail }
-
-func (e ValidationError) Kind() string { return "validation" }
-
-func (e ValidationError) PublicDetail() string { return e.Detail }
+// ErrConflict is returned when an item already exists.
+var ErrConflict = errors.NewItemConflict("")
