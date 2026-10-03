@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -24,15 +25,19 @@ func Validate[T any](next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var req T
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			slog.InfoContext(r.Context(), "request_invalid", "error", "invalid JSON", "status", http.StatusBadRequest)
 			writeJSON(w, http.StatusBadRequest, errorBody{Detail: "Invalid JSON"})
 			return
 		}
 		if err := validate.Struct(req); err != nil {
 			var ve validator.ValidationErrors
 			if errorsAs(err, &ve) {
-				writeJSON(w, http.StatusBadRequest, errorBody{Detail: formatValidationErrors(ve)})
+				detail := formatValidationErrors(ve)
+				slog.InfoContext(r.Context(), "request_invalid", "error", detail, "status", http.StatusBadRequest)
+				writeJSON(w, http.StatusBadRequest, errorBody{Detail: detail})
 				return
 			}
+			slog.InfoContext(r.Context(), "request_invalid", "error", "validation failed", "status", http.StatusBadRequest)
 			writeJSON(w, http.StatusBadRequest, errorBody{Detail: "Validation failed"})
 			return
 		}

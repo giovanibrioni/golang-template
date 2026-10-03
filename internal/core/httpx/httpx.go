@@ -84,12 +84,14 @@ func mapError(ctx context.Context, err error) (int, string) {
 	if errors.As(err, &public) {
 		switch public.Kind() {
 		case "not_found":
+			slog.InfoContext(ctx, "request_not_found", "error", err)
 			return http.StatusNotFound, "Item not found"
 		case "validation":
 			detail := public.PublicDetail()
 			if detail == "" {
 				detail = "Invalid request"
 			}
+			slog.InfoContext(ctx, "request_invalid", "error", detail)
 			return http.StatusBadRequest, detail
 		}
 	}

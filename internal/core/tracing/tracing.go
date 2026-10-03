@@ -16,10 +16,12 @@ import (
 
 // Init initializes OpenTelemetry tracing.
 // Returns a shutdown function to flush spans on exit.
+// If OTEL_EXPORTER_OTLP_ENDPOINT is empty, tracing is disabled (no-op).
 func Init(ctx context.Context, serviceName string) (func(context.Context) error, error) {
 	endpoint := os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
 	if endpoint == "" {
-		endpoint = "localhost:4317"
+		slog.InfoContext(ctx, "tracing disabled (OTEL_EXPORTER_OTLP_ENDPOINT not set)")
+		return func(context.Context) error { return nil }, nil
 	}
 
 	exporter, err := otlptracegrpc.New(ctx,

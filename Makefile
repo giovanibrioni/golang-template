@@ -27,6 +27,7 @@ down:
 	docker compose down
 
 dev:
+	OTEL_EXPORTER_OTLP_ENDPOINT= \
 	DATABASE_URL=postgres://postgres:postgres@localhost:5432/app?sslmode=disable \
 	  go run ./cmd/api
 
