@@ -26,11 +26,11 @@ func TestItemsAPI(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("list status = %d body = %s", rec.Code, rec.Body.String())
 	}
-	var listed []items.Item
+	var listed items.ListItemsResponse
 	if err := json.Unmarshal(rec.Body.Bytes(), &listed); err != nil {
 		t.Fatalf("list json: %v", err)
 	}
-	if len(listed) != 1 || listed[0].ID != created.ID {
+	if len(listed.Items) != 1 || listed.Items[0].ID != created.ID {
 		t.Fatalf("list = %+v", listed)
 	}
 
@@ -38,11 +38,11 @@ func TestItemsAPI(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("get status = %d body = %s", rec.Code, rec.Body.String())
 	}
-	var fetched items.Item
+	var fetched items.GetItemResponse
 	if err := json.Unmarshal(rec.Body.Bytes(), &fetched); err != nil {
 		t.Fatalf("get json: %v", err)
 	}
-	if fetched.ID != created.ID || fetched.Name != "widget" {
+	if fetched.Item.ID != created.ID || fetched.Item.Name != "widget" {
 		t.Fatalf("fetched = %+v", fetched)
 	}
 	if rec.Header().Get("X-Request-ID") == "" {
@@ -53,7 +53,7 @@ func TestItemsAPI(t *testing.T) {
 	assertDetail(t, rec, http.StatusNotFound, "Item not found")
 
 	rec = request(handler, http.MethodPost, "/api/v1/items", strings.NewReader(`{"name":""}`))
-	assertDetail(t, rec, http.StatusBadRequest, "Name must be between 1 and 200 characters")
+	assertDetail(t, rec, http.StatusBadRequest, "Validation failed")
 }
 
 func postItem(t *testing.T, handler http.Handler, body string, want int) items.Item {
@@ -62,11 +62,11 @@ func postItem(t *testing.T, handler http.Handler, body string, want int) items.I
 	if rec.Code != want {
 		t.Fatalf("status = %d body = %s", rec.Code, rec.Body.String())
 	}
-	var item items.Item
-	if err := json.Unmarshal(rec.Body.Bytes(), &item); err != nil {
+	var created items.CreateItemResponse
+	if err := json.Unmarshal(rec.Body.Bytes(), &created); err != nil {
 		t.Fatalf("json: %v", err)
 	}
-	return item
+	return created.Item
 }
 
 func request(handler http.Handler, method, path string, body io.Reader) *httptest.ResponseRecorder {
