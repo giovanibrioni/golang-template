@@ -8,10 +8,11 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
 
-	"github.com/giovani/golang-template/internal/api/v1"
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/httpx"
-	"github.com/giovani/golang-template/internal/items"
+	"github.com/giovanibrioni/golang-template/internal/api/v1"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/httpx"
+	"github.com/giovanibrioni/golang-template/internal/health"
+	"github.com/giovanibrioni/golang-template/internal/items"
 )
 
 // NewRouter mounts versioned routes and the shared middleware.
@@ -24,6 +25,7 @@ func NewRouter(beginner db.Beginner, itemsService *items.Service) http.Handler {
 	r.Use(httpx.OTelMiddleware)
 
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
+	r.Get("/health", httpx.Wrap(beginner, health.Handler))
 
 	// Mount v1 routes
 	r.Mount("/api/v1", v1.Routes(beginner, itemsService))

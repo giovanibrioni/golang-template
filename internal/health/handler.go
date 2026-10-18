@@ -4,8 +4,8 @@ package health
 import (
 	"net/http"
 
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/httpx"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/httpx"
 )
 
 type statusResponse struct {

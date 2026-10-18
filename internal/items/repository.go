@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/giovani/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
 )
 
 // Repository stores items. Implementations must not commit or roll back.

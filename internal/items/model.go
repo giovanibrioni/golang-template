@@ -3,7 +3,7 @@ package items
 import (
 	"time"
 
-	"github.com/giovani/golang-template/internal/core/errors"
+	"github.com/giovanibrioni/golang-template/internal/core/errors"
 )
 
 // Item is the public representation of a stored item.

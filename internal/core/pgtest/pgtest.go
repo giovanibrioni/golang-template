@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/giovani/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
 )
 
 // Pool is set by Run when DATABASE_URL is available.

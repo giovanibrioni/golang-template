@@ -6,8 +6,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/giovani/golang-template/internal/core/pgtest"
-	"github.com/giovani/golang-template/internal/items"
+	"github.com/giovanibrioni/golang-template/internal/core/pgtest"
+	"github.com/giovanibrioni/golang-template/internal/items"
 )
 
 func TestMain(m *testing.M) {

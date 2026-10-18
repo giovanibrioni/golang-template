@@ -7,7 +7,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: homelab
     services:
       postgres:
         image: postgres:17
@@ -36,3 +37,43 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/app_test?sslmode=disable
         run: go test ./...
+
+  deliver:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: homelab
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and publish
+        run: |
+          set -eu
+          short=$(git rev-parse --short=7 HEAD)
+          app=golang-template
+          image="registry.registry.svc.cluster.local:5000/${app}:${short}"
+          docker build -t "$image" .
+          docker push "$image"
+          token=$(cat /etc/homelab/infra-token)
+          rm -rf /tmp/homelab-infra
+          git clone "https://x-access-token:${token}@github.com/giovanibrioni/homelab-infra.git" /tmp/homelab-infra
+          cd /tmp/homelab-infra
+          git config user.name homelab-ci
+          git config user.email homelab-ci@users.noreply.github.com
+          if [ ! -f "apps/${app}/kustomization.yaml" ]; then
+            mkdir -p "apps/${app}"
+            cp -a "${GITHUB_WORKSPACE}/deploy/." "apps/${app}/"
+          fi
+          sed -i "s/newTag: .*/newTag: \"${short}\"/" "apps/${app}/kustomization.yaml"
+          git add "apps/${app}"
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "deploy(${app}): ${short}"
+          ok=0
+          for _ in 1 2 3; do
+            if git pull --rebase origin main && git push origin main; then
+              ok=1
+              break
+            fi
+            sleep 2
+          done
+          test "$ok" = 1

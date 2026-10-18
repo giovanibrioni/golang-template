@@ -5,10 +5,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/httpx"
-	"github.com/giovani/golang-template/internal/health"
-	"github.com/giovani/golang-template/internal/items"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/httpx"
+	"github.com/giovanibrioni/golang-template/internal/health"
+	"github.com/giovanibrioni/golang-template/internal/items"
 )
 
 // Mount registers all v1 routes on r.

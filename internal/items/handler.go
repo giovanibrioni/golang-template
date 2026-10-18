@@ -5,9 +5,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/errors"
-	"github.com/giovani/golang-template/internal/core/httpx"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/errors"
+	"github.com/giovanibrioni/golang-template/internal/core/httpx"
 )
 
 // Mount registers item routes on r. r is already prefixed with /api/v1/items.

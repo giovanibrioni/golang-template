@@ -1,4 +1,4 @@
-module github.com/giovani/golang-template
+module github.com/giovanibrioni/golang-template
 
 go 1.27
 

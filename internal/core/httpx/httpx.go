@@ -11,8 +11,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/logging"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/logging"
 )
 
 // Response is the HTTP result of a handler. The wrapper writes it after commit.

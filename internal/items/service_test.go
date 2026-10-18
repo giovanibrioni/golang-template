@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	coreerrors "github.com/giovani/golang-template/internal/core/errors"
-	"github.com/giovani/golang-template/internal/items"
+	coreerrors "github.com/giovanibrioni/golang-template/internal/core/errors"
+	"github.com/giovanibrioni/golang-template/internal/items"
 )
 
 type fakeRepository struct {

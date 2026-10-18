@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"unicode/utf8"
 
-	"github.com/giovani/golang-template/internal/core/errors"
+	"github.com/giovanibrioni/golang-template/internal/core/errors"
 )
 
 // Service applies item rules. It does not know about HTTP or transactions.

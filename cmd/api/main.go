@@ -11,13 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	_ "github.com/giovani/golang-template/docs"
-	"github.com/giovani/golang-template/internal/api"
-	"github.com/giovani/golang-template/internal/core/config"
-	"github.com/giovani/golang-template/internal/core/db"
-	"github.com/giovani/golang-template/internal/core/logging"
-	"github.com/giovani/golang-template/internal/core/tracing"
-	"github.com/giovani/golang-template/internal/items"
+	_ "github.com/giovanibrioni/golang-template/docs"
+	"github.com/giovanibrioni/golang-template/internal/api"
+	"github.com/giovanibrioni/golang-template/internal/core/config"
+	"github.com/giovanibrioni/golang-template/internal/core/db"
+	"github.com/giovanibrioni/golang-template/internal/core/logging"
+	"github.com/giovanibrioni/golang-template/internal/core/tracing"
+	"github.com/giovanibrioni/golang-template/internal/items"
 )
 
 // @title Golang Template API

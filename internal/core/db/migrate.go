@@ -10,7 +10,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/giovani/golang-template/migrations"
+	"github.com/giovanibrioni/golang-template/migrations"
 )
 
 // migrationLockKey is the advisory lock key that serializes concurrent Migrate calls.
