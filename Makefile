@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install up down dev migrate swagger test-unit test lint review
+.PHONY: help install up down dev migrate swagger openapi test-unit test lint review
 
 help: ## Show available targets
 	@echo "Targets:"
@@ -37,8 +37,11 @@ migrate:
 	  go run ./cmd/api -migrate-only
 
 swagger:
-	go install github.com/swaggo/swag/cmd/swag@latest
+	go install github.com/swaggo/swag/cmd/swag@v1.16.4
 	~/go/bin/swag init -g cmd/api/main.go -o docs
+
+openapi: swagger
+	cp docs/swagger.yaml openapi.yaml
 
 test-unit:
 	go test -short ./...

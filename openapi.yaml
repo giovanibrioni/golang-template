@@ -1,0 +1,126 @@
+basePath: /api/v1
+definitions:
+  httpx.ErrorResponse:
+    properties:
+      detail:
+        example: Internal server error
+        type: string
+    type: object
+  items.CreateItemRequest:
+    properties:
+      name:
+        maxLength: 100
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+  items.CreateItemResponse:
+    properties:
+      item:
+        $ref: '#/definitions/items.Item'
+    type: object
+  items.GetItemResponse:
+    properties:
+      item:
+        $ref: '#/definitions/items.Item'
+    type: object
+  items.Item:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  items.ListItemsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/items.Item'
+        type: array
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: A minimal Go HTTP template organized by domain
+  title: Golang Template API
+  version: "1.0"
+paths:
+  /api/v1/items:
+    get:
+      description: Get a list of all items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/items.ListItemsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: List all items
+      tags:
+      - items
+    post:
+      consumes:
+      - application/json
+      description: Create a new item with the given name
+      parameters:
+      - description: Item to create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/items.CreateItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/items.CreateItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Create a new item
+      tags:
+      - items
+  /api/v1/items/{id}:
+    get:
+      description: Get a single item by its ID
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/items.GetItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Get an item by ID
+      tags:
+      - items
+schemes:
+- http
+swagger: "2.0"

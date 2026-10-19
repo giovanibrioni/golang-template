@@ -33,6 +33,10 @@ jobs:
         run: test -z "$(gofmt -l .)"
       - name: Vet
         run: go vet ./...
+      - name: OpenAPI
+        run: |
+          make openapi
+          git diff --exit-code -- openapi.yaml docs/swagger.yaml docs/swagger.json docs/docs.go
       - name: Test
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/app_test?sslmode=disable
@@ -69,10 +73,40 @@ jobs:
           sed -i "s/newTag: .*/newTag: \"${short}\"/" "apps/${app}/kustomization.yaml"
           bash scripts/render-kong-expose.sh
           git add "apps/${app}" infrastructure/kong/deck/apps
+          if ! git diff --cached --quiet; then
+            git commit -m "deploy(${app}): ${short}"
+            ok=0
+            for _ in 1 2 3; do
+              if git pull --rebase origin main && git push origin main; then
+                ok=1
+                break
+              fi
+              sleep 2
+            done
+            test "$ok" = 1
+          fi
+          if [ ! -f "${GITHUB_WORKSPACE}/openapi.yaml" ]; then
+            exit 0
+          fi
+          rm -rf /tmp/homelab-contracts
+          git clone "https://x-access-token:${token}@github.com/giovanibrioni/homelab-contracts.git" /tmp/homelab-contracts
+          cd /tmp/homelab-contracts
+          git config user.name homelab-ci
+          git config user.email homelab-ci@users.noreply.github.com
+          mkdir -p "${app}"
+          cp "${GITHUB_WORKSPACE}/openapi.yaml" "${app}/openapi.yaml"
+          if [ -f "${GITHUB_WORKSPACE}/asyncapi.yaml" ]; then
+            cp "${GITHUB_WORKSPACE}/asyncapi.yaml" "${app}/asyncapi.yaml"
+          fi
+          if [ -d "${GITHUB_WORKSPACE}/proto" ]; then
+            rm -rf "${app}/proto"
+            cp -a "${GITHUB_WORKSPACE}/proto" "${app}/proto"
+          fi
+          git add "${app}"
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "deploy(${app}): ${short}"
+          git commit -m "contracts(${app}): ${short}"
           ok=0
           for _ in 1 2 3; do
             if git pull --rebase origin main && git push origin main; then
