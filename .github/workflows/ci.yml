@@ -62,8 +62,13 @@ jobs:
             mkdir -p "apps/${app}"
             cp -a "${GITHUB_WORKSPACE}/deploy/." "apps/${app}/"
           fi
+          if [ -f "${GITHUB_WORKSPACE}/deploy/expose.yaml" ]; then
+            mkdir -p "apps/${app}"
+            cp "${GITHUB_WORKSPACE}/deploy/expose.yaml" "apps/${app}/expose.yaml"
+          fi
           sed -i "s/newTag: .*/newTag: \"${short}\"/" "apps/${app}/kustomization.yaml"
-          git add "apps/${app}"
+          bash scripts/render-kong-expose.sh
+          git add "apps/${app}" infrastructure/kong/deck/apps
           if git diff --cached --quiet; then
             exit 0
           fi
