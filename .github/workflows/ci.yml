@@ -77,6 +77,12 @@ jobs:
             mkdir -p "apps/${app}"
             cp "${GITHUB_WORKSPACE}/deploy/expose.yaml" "apps/${app}/expose.yaml"
           fi
+          if [ -f "${GITHUB_WORKSPACE}/homelab.yaml" ]; then
+            mkdir -p "apps/${app}"
+            cp "${GITHUB_WORKSPACE}/homelab.yaml" "apps/${app}/homelab.yaml"
+            python3 scripts/check-homelab.py
+            python3 scripts/render-app.py --app "${app}"
+          fi
           sed -i "s/newTag: .*/newTag: \"${short}\"/" "apps/${app}/kustomization.yaml"
           bash scripts/render-kong-expose.sh
           git add "apps/${app}" infrastructure/kong/deck/apps
