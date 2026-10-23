@@ -52,7 +52,7 @@ jobs:
 
   deliver:
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'pocs-dev-br'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' && github.repository_owner == 'pocs-dev-br'
     runs-on: homelab
     steps:
       - uses: actions/checkout@v4
