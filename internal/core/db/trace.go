@@ -20,6 +20,11 @@ func (queryTracer) TraceQueryStart(ctx context.Context, conn *pgx.Conn, _ pgx.Tr
 		}
 		if host := conn.Config().Host; host != "" {
 			attrs = append(attrs, attribute.String("server.address", host))
+			attrs = append(attrs, attribute.String("net.peer.name", host))
+		}
+		if port := conn.Config().Port; port != 0 {
+			attrs = append(attrs, attribute.Int("server.port", int(port)))
+			attrs = append(attrs, attribute.Int("net.peer.port", int(port)))
 		}
 	}
 	ctx, _ = otel.Tracer("db").Start(ctx, "postgresql.query",
