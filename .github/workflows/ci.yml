@@ -70,16 +70,11 @@ jobs:
           cd /tmp/homelab-infra
           git config user.name homelab-ci
           git config user.email homelab-ci@users.noreply.github.com
-          if [ ! -f "apps/${app}/kustomization.yaml" ]; then
-            mkdir -p "apps/${app}"
-            cp -a "${GITHUB_WORKSPACE}/deploy/." "apps/${app}/"
-          fi
+          mkdir -p "apps/${app}"
           if [ -f "${GITHUB_WORKSPACE}/deploy/expose.yaml" ]; then
-            mkdir -p "apps/${app}"
             cp "${GITHUB_WORKSPACE}/deploy/expose.yaml" "apps/${app}/expose.yaml"
           fi
           if [ -f "${GITHUB_WORKSPACE}/homelab.yaml" ]; then
-            mkdir -p "apps/${app}"
             cp "${GITHUB_WORKSPACE}/homelab.yaml" "apps/${app}/homelab.yaml"
             python3 scripts/check-homelab.py
             python3 scripts/render-app.py --app "${app}"

@@ -1,0 +1,4 @@
+stack: go
+resources:
+  database: postgres
+  redis: false
